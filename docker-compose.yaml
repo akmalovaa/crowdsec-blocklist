@@ -11,8 +11,8 @@ services:
       - 8080:8080
       - 6060:6060
     volumes:
-      - ./crowdsec/data:/var/lib/crowdsec/data
-      - ./crowdsec/config:/etc/crowdsec
+      - $PWD/crowdsec/data:/var/lib/crowdsec/data
+      - $PWD/crowdsec/config:/etc/crowdsec
 
   blocklist:
     image: ${CROWDSEC_BLOCKLIST_IMAGE_TAG:-crowdsecurity/blocklist-mirror:latest}
