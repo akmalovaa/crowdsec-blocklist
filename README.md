@@ -23,7 +23,7 @@ Install the required versions in `docker-compose.yaml`
 
 up crowdsec
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 You need add bouncers to get the `lapi_key` command
