@@ -1,0 +1,25 @@
+services:
+  crowdsec:
+    image: ${CROWDSEC_IMAGE_TAG:-crowdsecurity/crowdsec:latest}
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Yekaterinburg
+      COLLECTIONS: "crowdsecurity/linux a1ad/mikrotik crowdsecurity/traefik" # crowdsecurity/nginx fulljackz/proxmox 
+      # ENROLL_KEY: "clomgynlexampletokenn3cd" # Uncomment and insert your token if you want crowdsec dashboard https://app.crowdsec.net
+      # ENROLL_INSTANCE_NAME: "homelab" # Uncomment if you want https://app.crowdsec.net
+    ports:
+      - 8080:8080
+      - 6060:6060
+    volumes:
+      - ./crowdsec/data:/var/lib/crowdsec/data
+      - ./crowdsec/config:/etc/crowdsec
+
+  blocklist:
+    image: ${CROWDSEC_BLOCKLIST_IMAGE_TAG:-crowdsecurity/blocklist-mirror:latest}
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Yekaterinburg
+    ports:
+      - 41412:41412
+    volumes:
+      - $PWD/crowdsec-blocklist-mirror.yaml:/etc/crowdsec/bouncers/crowdsec-blocklist-mirror.yaml

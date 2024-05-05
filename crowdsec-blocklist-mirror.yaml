@@ -1,0 +1,32 @@
+config_version: v1.0
+crowdsec_config:
+  lapi_key: QBkCZVhsevAVxNwExampleTkeyfdssdfrqNyTsdk42/U
+  lapi_url: crowdsec:8080
+  update_frequency: 10s
+  include_scenarios_containing: []
+  exclude_scenarios_containing: []
+  only_include_decisions_from: []
+  insecure_skip_verify: false
+
+blocklists:
+  - format: plain_text # Supported formats are either "plain_text" or "mikrotik"
+    endpoint: /security/blocklist
+    authentication:
+      type: none # Supported types are either of "none", "ip_based", "basic"
+      user:
+      password:
+      trusted_ips: # IP ranges, or IPs which don't require auth to access this blocklist
+        - 127.0.0.1
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+        - ::1
+
+listen_uri: 0.0.0.0:41412
+tls:
+  cert_file:
+  key_file:
+
+metrics:
+  enabled: true
+  endpoint: /metrics
