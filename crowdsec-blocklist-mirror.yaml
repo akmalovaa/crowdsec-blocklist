@@ -1,7 +1,7 @@
 config_version: v1.0
 crowdsec_config:
   lapi_key: QBkCZVhsevAVxNwExampleTkeyfdssdfrqNyTsdk42/U
-  lapi_url: crowdsec:8080
+  lapi_url: http://crowdsec:8080
   update_frequency: 10s
   include_scenarios_containing: []
   exclude_scenarios_containing: []
