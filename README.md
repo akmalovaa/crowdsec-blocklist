@@ -39,7 +39,7 @@ Example output:
 > 
 > Please keep this key since you will not be able to retrieve it!
 
-Change the received key in the `crowdsec-blocklist-mirror.yaml` file to the value of `lapi_key`
+Change the received key in the `crowdsec-blocklist-mirror.yaml` file to the value of `lapi_key` or use env `API_KEY`
 
 ```shell
 docker compose restart
