@@ -1,16 +1,19 @@
 config_version: v1.0
 crowdsec_config:
-  lapi_key: QBkCZVhsevAVxNwExampleTkeyfdssdfrqNyTsdk42/U
+  lapi_key: ${API_KEY}
   lapi_url: http://crowdsec:8080
-  update_frequency: 10s
+  update_frequency: 60s
   include_scenarios_containing: []
   exclude_scenarios_containing: []
   only_include_decisions_from: []
   insecure_skip_verify: false
+  supported_decisions_types:
+    - ban
 
 blocklists:
   - format: plain_text # Supported formats are either "plain_text" or "mikrotik"
     endpoint: /security/blocklist
+    aggregate: true
     authentication:
       type: none # Supported types are either of "none", "ip_based", "basic"
       user:
@@ -21,6 +24,10 @@ blocklists:
         - 192.168.0.0/16
         - 172.16.0.0/12
         - ::1
+
+log_media: stdout
+log_level: info
+enable_access_logs: true
 
 listen_uri: 0.0.0.0:41412
 tls:

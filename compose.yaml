@@ -1,13 +1,10 @@
 services:
   crowdsec:
-    image: ${CROWDSEC_IMAGE_TAG:-crowdsecurity/crowdsec:latest}
+    image: ${CROWDSEC_IMAGE_TAG:-crowdsecurity/crowdsec:v1.7.7}
     container_name: crowdsec
     restart: unless-stopped
-    environment:
-      TZ: Asia/Yekaterinburg
-      COLLECTIONS: "a1ad/mikrotik crowdsecurity/traefik" # crowdsecurity/nginx fulljackz/proxmox crowdsecurity/linux 
-      # ENROLL_KEY: "clomgynlexampletokenn3cd" # Uncomment and insert your token if you want crowdsec dashboard https://app.crowdsec.net
-      # ENROLL_INSTANCE_NAME: "homelab" # Uncomment if you want https://app.crowdsec.net
+    env_file:
+      - .env
     ports:
       - 8080:8080
       - 6060:6060
@@ -15,29 +12,34 @@ services:
       - ./crowdsec/data:/var/lib/crowdsec/data
       - ./crowdsec/config:/etc/crowdsec
     healthcheck:
-      test: ["CMD", "cscli", "version"]
-      start_period: 10s
+      test: ["CMD-SHELL", "cscli lapi status 2>&1 | grep -q 'on'"]
+      start_period: 30s
+      interval: 30s
+      timeout: 5s
+      retries: 3
     networks:
       crowdsec_net:
         ipv4_address: 172.21.0.10
 
   blocklist:
-    image: ${CROWDSEC_BLOCKLIST_IMAGE_TAG:-crowdsecurity/blocklist-mirror:latest}
+    image: ${CROWDSEC_BLOCKLIST_IMAGE_TAG:-crowdsecurity/blocklist-mirror:v0.0.6}
     container_name: blocklist
     restart: unless-stopped
-    environment:
-      TZ: Asia/Yekaterinburg
-      API_KEY: ${API_KEY:-'UseCrowdSecAPIKey'}
+    depends_on:
+      crowdsec:
+        condition: service_healthy
+    env_file:
+      - .env
     ports:
       - 41412:41412
     volumes:
       - ./crowdsec-blocklist-mirror.yaml:/etc/crowdsec/bouncers/crowdsec-blocklist-mirror.yaml
     healthcheck:
-      test: wget -qO- http://localhost:41412/security/blocklist?ipv4only || exit 1
+      test: wget -qO- http://localhost:41412/metrics || exit 1
       start_period: 20s
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      interval: 30s
+      timeout: 5s
+      retries: 3
     networks:
       crowdsec_net:
         ipv4_address: 172.21.0.20

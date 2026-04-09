@@ -17,12 +17,13 @@ It uses behavioral patterns to identify potentially malicious activity and can b
 
 ## Installation using docker compose
 
-Clone repo 
+Clone repo
 
 Install the required versions in `docker-compose.yaml`
 
 up crowdsec
-```
+
+```shell
 docker compose up -d
 ```
 
@@ -39,7 +40,7 @@ Example output:
 > 
 > Please keep this key since you will not be able to retrieve it!
 
-Change the received key in the `crowdsec-blocklist-mirror.yaml` file to the value of `lapi_key` or use env `API_KEY`
+Change the received key in the `.env` file to env `API_KEY`
 
 ```shell
 docker compose restart
@@ -49,48 +50,18 @@ docker compose restart
 
 Open in a browser
 
-- **Crowdsec** - `http://YOUR_IP:6060/metrics `
-
-```
-# HELP cs_active_decisions Number of active decisions.
-# TYPE cs_active_decisions gauge
-cs_active_decisions{action="ban",origin="CAPI",reason="a1ad/mikrotik-bf"} 55
-cs_active_decisions{action="ban",origin="CAPI",reason="a1ad/mikrotik-scan-multi_ports"} 112
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/CVE-2017-9841"} 618
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/CVE-2019-18935"} 28
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/CVE-2022-26134"} 103
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/fortinet-cve-2018-13379"} 29
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/grafana-cve-2021-43798"} 12
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/http-admin-interface-probing"} 1782
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/http-backdoors-attempts"} 177
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/ssh-bf"} 9501
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/ssh-slow-bf"} 9
-cs_active_decisions{action="ban",origin="CAPI",reason="crowdsecurity/thinkphp-cve-2018-20062"} 1
-...
-```
-
-- **Blocklist** - `http://YOUR_IP:41412/metrics` 
-```
-# HELP active_decision_count Total number of decisions served by any blocklist
-# TYPE active_decision_count gauge
-active_decision_count 18777
-...
-```
+- **Crowdsec** - `http://localhost:6060/metrics `
+- **Blocklist** - `http://localhost:41412/metrics` 
 
 Above all:
-- **Blocklist** - `http://YOUR_IP:41412/security/blocklist?ipv4only`
-
-```
-1.2.3.4
-2.3.4.5
-...
-```
+- **Blocklist** - `http://localhost:41412/security/blocklist?ipv4only`
 
 ## Additional commands cli
 
-all block list addresses
+count block list addresses
+
 ```shell
-docker compose exec crowdsec cscli decisions list --origin CAPI -o raw 
+docker compose exec crowdsec cscli decisions list --origin CAPI -o raw | wc -l
 ```
 
 collections list
@@ -98,14 +69,14 @@ collections list
 docker compose exec crowdsec cscli collections list
 ```
 
-You can change it in the `docker-compose' file.yaml` variable `COLLECTIONS`
+You can change it in the `.env` variable `COLLECTIONS`
 
-```yaml
-environment:
-  COLLECTIONS: "crowdsecurity/linux a1ad/mikrotik crowdsecurity/traefik"
+```shell
+COLLECTIONS="crowdsecurity/linux a1ad/mikrotik crowdsecurity/traefik"
 ```
 
 metrics
+
 ```shell
 docker compose exec crowdsec cscli metrics
 ```
