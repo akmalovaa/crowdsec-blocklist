@@ -19,9 +19,16 @@ It uses behavioral patterns to identify potentially malicious activity and can b
 
 Clone repo
 
-Install the required versions in `docker-compose.yaml`
+```shell
+git clone https://github.com/akmalovaa/crowdsec-blocklist.git
+cd crowdsec-blocklist
+```
 
-up crowdsec
+Prepare `.env` file
+
+```shell
+cp .env.example .env
+```
 
 ```shell
 docker compose up -d
@@ -43,15 +50,16 @@ Example output:
 Change the received key in the `.env` file to env `API_KEY`
 
 ```shell
-docker compose restart
+docker compose down
+docker compose up -d
 ```
 
 ## Сhecking
 
 Open in a browser
 
-- **Crowdsec** - `http://localhost:6060/metrics `
-- **Blocklist** - `http://localhost:41412/metrics` 
+- **Crowdsec** - `http://localhost:6060/metrics`
+- **Blocklist** - `http://localhost:41412/metrics`
 
 Above all:
 - **Blocklist** - `http://localhost:41412/security/blocklist?ipv4only`
@@ -65,6 +73,7 @@ docker compose exec crowdsec cscli decisions list --origin CAPI -o raw | wc -l
 ```
 
 collections list
+
 ```shell
 docker compose exec crowdsec cscli collections list
 ```
@@ -96,3 +105,18 @@ As a result, we get a local service with current dangerous IP addresses and can 
 **Resources** `docker stats`:
 
 ![docker stats](./img/docker_stats.png)
+
+
+### Crowdsec APP
+
+COMMUNITY plan is free and includes 3 free blocklists subscribed
+
+- https://app.crowdsec.net/security-engines
+
+Active subscriptions:
+
+- https://app.crowdsec.net/blocklists/subscriptions
+
+Cloud blocklist integration:
+
+- https://app.crowdsec.net/blocklists/integrations
